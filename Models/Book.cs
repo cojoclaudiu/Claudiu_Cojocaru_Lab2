@@ -8,15 +8,16 @@ namespace Claudiu_Cojocaru_Lab2.Models
     {
         public int ID { get; set; }
         [Display(Name = "Book Title")]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         public int? AuthorID { get; set; }
         public Author? Author { get; set; }
 
-        [Column(TypeName = "REAL")] 
+        [Column(TypeName = "REAL")]
         public double Price { get; set; }
         public DateTime PublishingDate { get; set; }
-        
+
         public int? PublisherID { get; set; }
         public Publisher? Publisher { get; set; } // navigation property
+        public ICollection<BookCategory>? BookCategories { get; set; }
     }
 }

@@ -98,6 +98,9 @@ namespace Claudiu_Cojocaru_Lab2.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    
+                    // Adaugare rol User pentru utilizatorul nou creat
+                    await _userManager.AddToRoleAsync(user, "User");
 
                     var newMember = new Member
                     {

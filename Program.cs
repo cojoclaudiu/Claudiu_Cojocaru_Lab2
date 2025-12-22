@@ -6,8 +6,24 @@ using Claudiu_Cojocaru_Lab2.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminPolicy", policy =>
+        policy.RequireRole("Admin"));
+});
+
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Books");
+    options.Conventions.AllowAnonymousToPage("/Books/Index");
+    options.Conventions.AllowAnonymousToPage("/Books/Details");
+    
+    // Admin
+    options.Conventions.AuthorizeFolder("/Members", "AdminPolicy");
+    options.Conventions.AuthorizeFolder("/Publishers", "AdminPolicy");
+    options.Conventions.AuthorizeFolder("/Categories", "AdminPolicy");
+});
 
 // Am schimbat serverul de la SQL Server la SQLite
 // Folosesc macOS si rulez Visual Studio 2022 in VM Ware Fusion
@@ -23,6 +39,7 @@ builder.Services.AddDbContext<LibraryIdentityContext>(options =>
 // Identity registration
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<LibraryIdentityContext>();
 
 builder.Services.AddSingleton<IEmailSender, FakeEmailSender>();
